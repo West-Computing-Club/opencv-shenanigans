@@ -68,9 +68,9 @@ public class Main {
             }
             highlightContours(input, contours, RED_COLOR);
             output(outputDirectory + test.path.replace(directory, ""), 1, input);
-            // output(outputDirectory + test.path.replace(directory, ""), 2, g);
-            // output(outputDirectory + test.path.replace(directory, ""), 3, m);
-            // output(outputDirectory + test.path.replace(directory, ""), 4, gm);
+            output(outputDirectory + test.path.replace(directory, ""), 2, g);
+            output(outputDirectory + test.path.replace(directory, ""), 3, m);
+            output(outputDirectory + test.path.replace(directory, ""), 4, gm);
         }
     }
 
