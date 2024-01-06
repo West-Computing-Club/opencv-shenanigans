@@ -51,9 +51,11 @@ public class Main {
             // src, gaussian kernel size
             Mat g = gaussian(input).clone();
             // src, ranges
-            Mat m = mask(input, test.ranges).clone();
+            Mat m = mask(hsv, test.ranges).clone();
 
-            Mat gm = mask(g, test.ranges).clone();
+            Mat temp = new Mat();
+            Imgproc.cvtColor(g, temp, Imgproc.COLOR_BGR2HSV);
+            Mat gm = mask(temp, test.ranges).clone();
 
             // src
             List<MatOfPoint> contours = contours(gm);
