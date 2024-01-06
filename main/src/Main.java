@@ -66,9 +66,9 @@ public class Main {
             }
             highlightContours(input, contours, RED_COLOR);
             output(outputDirectory + test.path.replace(directory, ""), 1, input);
-            output(outputDirectory + test.path.replace(directory, ""), 2, g);
-            output(outputDirectory + test.path.replace(directory, ""), 3, m);
-            output(outputDirectory + test.path.replace(directory, ""), 4, gm);
+            // output(outputDirectory + test.path.replace(directory, ""), 2, g);
+            // output(outputDirectory + test.path.replace(directory, ""), 3, m);
+            // output(outputDirectory + test.path.replace(directory, ""), 4, gm);
         }
     }
 
@@ -119,6 +119,8 @@ public class Main {
         return mask(src, ranges.toArray(new ColorRange[0]));
     }
     public static Mat mask(Mat src, ColorRange ...ranges) {
+        mask1.setTo(new Scalar(0, 0, 0, 0));
+        mask2.setTo(new Scalar(0, 0, 0, 0));
         for (ColorRange range : ranges) {
             Core.inRange(src, range.lowerBound, range.upperBound, mask2);
 
