@@ -49,17 +49,20 @@ public class Main {
             // src, threshold, gaussian kernel size, HSV ranges
             List<VisionObject> objs = coloredObjectCoordinates(input, 0.01, test.ranges);
             // src, gaussian kernel size
-            Mat g = gaussian(input);
+            Mat g = gaussian(input).clone();
             // src, ranges
-            Mat m = mask(input, test.ranges);
+            Mat m = mask(input, test.ranges).clone();
 
-            Mat gm = mask(g, test.ranges);
+            Mat gm = mask(g, test.ranges).clone();
 
             // src
             List<MatOfPoint> contours = contours(gm);
 
+            System.out.println(String.format("Test: %s\n\t%s", test.path, test.ranges[0]));
             for (VisionObject obj : objs) {
                 highlightObject(input, obj, GREEN_COLOR);
+
+                System.out.println(String.format("\n\tObject: %s", obj));
             }
             highlightContours(input, contours, RED_COLOR);
             output(outputDirectory + test.path.replace(directory, ""), 1, input);
@@ -119,7 +122,7 @@ public class Main {
         for (ColorRange range : ranges) {
             Core.inRange(src, range.lowerBound, range.upperBound, mask2);
 
-            if (mask1.cols() != mask2.cols() || mask2.rows() != mask2.rows()) {
+            if (mask1.cols() != mask2.cols() || mask1.rows() != mask2.rows()) {
                 mask2.copyTo(mask1);
             }
             Core.bitwise_or(mask1, mask2, mask1);
