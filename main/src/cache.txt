@@ -1,0 +1,26 @@
+
+        // // Define the two rectangles
+        // Point p1 = new Point (0, 0), p2 = new Point (106, 421);
+        // Point p3 = new Point (106, 0), p4 = new Point(212, 421);    
+        // Rect rect1 = new Rect(p1, p2); // Set these values
+        // Rect rect2 = new Rect(p3, p4); // Set these values
+
+        // // Convert to HSV
+        // Mat hsv = new Mat();
+        // Imgproc.cvtColor(src, hsv, Imgproc.COLOR_BGR2HSV);
+
+        // // Define the color range for the cube
+        // // Hue goes to 179, all others go to 255.
+        // Scalar lowerColor = lowerRed1; // Set these values
+        // Scalar upperColor = upperRed1; // Set these values
+
+        // // Create a mask
+        // Mat mask = new Mat();
+        // Core.inRange(hsv, lowerColor, upperColor, mask);
+
+        // // Check if the cube is in the rectangles
+        // int count1 = Core.countNonZero(mask.submat(rect1));
+        // int count2 = Core.countNonZero(mask.submat(rect2));
+
+        // // Output result
+        // System.out.println(count1 + " " + count2);
