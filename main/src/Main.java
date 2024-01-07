@@ -18,6 +18,7 @@ public class Main {
     }
 
     // Static auxilary matrices since EOCV won't automatically release matrices per frame process.
+    // Note: HSV hue [0, 179] (not [0, 359]).
     private static Mat blurred = new Mat();
     private static Mat hsv = new Mat();
     private static Mat mask1 = new Mat(), mask2 = new Mat();
@@ -27,10 +28,10 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Scalar lowerRed = new Scalar(0, 100, 100);
+        Scalar lowerRed = new Scalar(0, 95, 95);
         Scalar upperRed = new Scalar(10, 255, 255);
-        Scalar lowerBlue = new Scalar(100, 100, 100);
-        Scalar upperBlue = new Scalar(225, 255, 255);
+        Scalar lowerBlue = new Scalar(100, 80, 80);
+        Scalar upperBlue = new Scalar(130, 255, 255);
 
         String directory = "resources/";
         String outputDirectory = "output/";
@@ -47,7 +48,7 @@ public class Main {
             Mat input = Imgcodecs.imread(test.path);
 
             // src, threshold, gaussian kernel size, HSV ranges
-            List<VisionObject> objs = coloredObjectCoordinates(input, 0.01, test.ranges);
+            List<VisionObject> objs = coloredObjectCoordinates(input, 0.02, test.ranges);
             // src, gaussian kernel size
             Mat g = gaussian(input).clone();
             // src, ranges
