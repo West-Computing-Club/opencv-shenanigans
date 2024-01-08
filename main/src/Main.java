@@ -25,6 +25,10 @@ public class Main {
     private static Mat hierarchy = new Mat();
     private static final Scalar GREEN_COLOR = new Scalar(0, 255, 0);
     private static final Scalar RED_COLOR = new Scalar(0, 0, 255);
+    private static final Scalar BLUE_COLOR = new Scalar(255, 0, 0);
+    private static final Scalar BLACK_COLOR = new Scalar(0, 0, 0);
+    private static final Scalar WHITE_COLOR = new Scalar(255, 255, 255);
+    private static final Scalar GREY_COLOR = new Scalar(100, 100, 100);
 
     public static void main(String[] args) {
 
@@ -48,7 +52,7 @@ public class Main {
             Mat input = Imgcodecs.imread(test.path);
 
             // src, threshold, gaussian kernel size, HSV ranges
-            List<VisionObject> objs = coloredObjectCoordinates(input, 0.0, 0.02, test.ranges);
+            List<VisionObject> objs = coloredObjectCoordinates(input, 0.01, 0.0, test.ranges);
             // src, gaussian kernel size
             Mat g = gaussian(input).clone();
             // src, ranges
@@ -61,13 +65,21 @@ public class Main {
             // src
             List<MatOfPoint> contours = contours(gm);
 
+            highlightContours(input, contours, RED_COLOR);
+
             System.out.println(String.format("Test: %s\n\t%s", test.path, test.ranges[0]));
             for (VisionObject obj : objs) {
                 highlightObject(input, obj, GREEN_COLOR);
 
+                String text = String.format("(%d, %d, %f, %f)", obj.x, obj.y, obj.pixelTotality, obj.boundingTotality);
+                Size textSize = Imgproc.getTextSize(text, Imgproc.FONT_HERSHEY_SIMPLEX, 0.5, 1, null);
+                int x = (int)Math.min(Math.max(textSize.width / 2, obj.x), input.width() - textSize.width / 2);
+                int y = (int)Math.min(Math.max(textSize.height / 2, obj.y), input.height() - textSize.height / 2);
+                simpleText(input, text, x, y, true, 0.5, WHITE_COLOR, 2);
+                simpleText(input, text, x, y, true, 0.5, BLACK_COLOR, 1);
+
                 System.out.println(String.format("\n\tObject: %s", obj));
             }
-            highlightContours(input, contours, RED_COLOR);
             output(outputDirectory + test.path.replace(directory, ""), 1, input);
             output(outputDirectory + test.path.replace(directory, ""), 2, g);
             output(outputDirectory + test.path.replace(directory, ""), 3, m);
@@ -174,8 +186,26 @@ public class Main {
     }
 
     public static void highlightObject(Mat src_dest, VisionObject obj, Scalar color) {
-        Point p1 = new Point(obj.x - obj.width / 2, obj.y - obj.height / 2);
-        Point p2 = new Point(p1.x + obj.width, p1.y + obj.height);
+        int x = obj.x - obj.width / 2;
+        int y = obj.y - obj.height / 2;
+        rectangle(
+            src_dest, 
+            x, 
+            y, 
+            x + obj.width, 
+            y + obj.height, 
+            color, 
+            2
+        );
+    }
+
+    public static void highlightContours(Mat src_dest, List<MatOfPoint> contours, Scalar color) {
+        Imgproc.drawContours(src_dest, contours, -1, color, 2);
+    }
+
+    public static void rectangle(Mat src_dest, int x1, int y1, int x2, int y2, Scalar color, int thickness) {
+        Point p1 = new Point(x1, y1);
+        Point p2 = new Point(x2, y2);
         Imgproc.rectangle(
             src_dest,
             p1, 
@@ -185,8 +215,22 @@ public class Main {
         );
     }
 
-    public static void highlightContours(Mat src_dest, List<MatOfPoint> contours, Scalar color) {
-        Imgproc.drawContours(src_dest, contours, -1, color, 2);
+    public static void simpleText(
+        Mat src_dest, 
+        String text, 
+        int x, 
+        int y, 
+        boolean center, 
+        double scale, 
+        Scalar color, 
+        int thickness
+    ) {
+        if (center) {
+            Size textSize = Imgproc.getTextSize(text, Imgproc.FONT_HERSHEY_SIMPLEX, scale, 1, null);
+            x -= textSize.width / 2;
+            y += textSize.height / 2;
+        }
+        Imgproc.putText(src_dest, text, new Point(x, y), Imgproc.FONT_HERSHEY_SIMPLEX, scale, color, thickness);
     }
 
     public static void output(String name, int id, Mat input) {
